@@ -9,6 +9,12 @@
    	String signupMsg = (String)session.getAttribute("signupMsg");
    	if(signupMsg != null) session.removeAttribute("signupMsg");
    	
+   	String updateMsg = (String)session.getAttribute("updateMsg");
+   	if(updateMsg != null) session.removeAttribute("updateMsg");
+   	
+   	String deleteMsg = (String)session.getAttribute("deleteMsg");
+   	if(deleteMsg != null) session.removeAttribute("deleteMsg");
+   	
    	String loc = (String)request.getAttribute("loc");
    	//Member loginMember = (Member)request.getAttribute("loginMember");
    	Member loginMember = (Member)session.getAttribute("loginMember");
@@ -39,6 +45,7 @@
 <% if(msg != null) {%>
 	alert("<%= msg %>");
 <% } %>
+
 <% if(loc != null){ %>
 	location.href = "<%= loc %>";
 <% } %>
@@ -46,6 +53,14 @@
 <% System.out.println("signupMsg@header=" + signupMsg); %>
 <% if(signupMsg != null) {%>
 	alert("<%= signupMsg %>");
+<% } %>
+<%--회원정보 수정 성공/실패 시 사용자 메세지 --%>
+<% if(updateMsg != null) {%>
+	alert("<%= updateMsg %>");
+<% } %>
+<%--회원탈퇴 성공/실패 시 사용자 메세지 --%>
+<% if(deleteMsg != null) {%>
+	alert("<%= deleteMsg %>");
 <% } %>
 	$(function(){
 		/*
@@ -70,8 +85,9 @@
 		
 		/* 
 		회원가입 폼 제출전 적절한 유효성 검사를 실시할 것.
+		<memberEnroll.jsp에서 처리>
 		*/
-		$('[name="memberEnrollFrm"]').submit(function(){
+	/* 	$('[name="memberEnrollFrm"]').submit(function(){
 			//id 4자이상
 			var $memberId_ = $("#memberId_");
 			if(/^.{4,}$/.test($memberId_.val()) == false){
@@ -87,7 +103,7 @@
 				return false;
 			}
 			
-		});
+		}); */
 		
 	});
 	
@@ -131,7 +147,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="button" value="내정보보기" />
+								<input type="button" value="내정보보기" onclick="location.href='<%= request.getContextPath() %>/member/memberView';" />
 								<input type="button" value="로그아웃"
 									onclick="location.href='<%= request.getContextPath() %>/member/logout';" />
 							</td>

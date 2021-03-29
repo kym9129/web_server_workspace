@@ -53,4 +53,9 @@ commit;
 
 select * from member;
 
-delete from member where member_id = '10';
+--delete from member;
+--updateAllById = update member 
+--set password = ?, member_name = ?, member_role = ?, gender = ?, birthday = ?, email = ?, phone = ?, address = ?, hobby = ?  
+--where member_id = ?
+
+--deleteMember = delete from member where member_id = ?

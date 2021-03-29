@@ -67,19 +67,7 @@ public class MemberDao {
 		int result = 0;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			 /* 	
-				private String memberId;
-				private String password;
-				private String memberName;
-				private String memberRole;
-				private String gender;
-				private Date birthday; //시분초 정보 필요하면 timestamp써야한다
-				private String email;
-				private String phone;
-				private String address;
-				private String hobby;
-				private Date enrollDate;
-					 */
+			
 			pstmt.setString(1, member.getMemberId());
 			pstmt.setString(2, member.getPassword());
 			pstmt.setString(3, member.getMemberName());
@@ -98,6 +86,50 @@ public class MemberDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return result;
+	}
+
+	public int updateAllById(Connection conn, Member member) {
+		int result = 0;
+		String sql = prop.getProperty("updateAllById");
+		
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, member.getPassword());
+			pstmt.setString(2, member.getMemberName());
+			pstmt.setString(3, member.getMemberRole());
+			pstmt.setString(4, member.getGender());
+			pstmt.setDate(5, member.getBirthday());
+			pstmt.setString(6, member.getEmail());
+			pstmt.setString(7, member.getPhone());
+			pstmt.setString(8, member.getAddress());
+			pstmt.setString(9, member.getHobby());
+			pstmt.setString(10, member.getMemberId());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	public int deleteMember(Connection conn, String memberId) {
+		int result = 0;
+		
+		String sql = prop.getProperty("deleteMember");
+		
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return result;
 	}
 

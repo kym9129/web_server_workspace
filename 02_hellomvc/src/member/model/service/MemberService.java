@@ -23,7 +23,6 @@ public class MemberService {
 	}
 	
 	public int insertMember(Member member) {
-		System.out.println("service called!");
 		Connection conn = getConnection();
 		int result = memberDao.insertMember(conn, member);
 		if(result > 0) {
@@ -33,6 +32,28 @@ public class MemberService {
 		}
 		close(conn);
 		
+		return result;
+	}
+	
+	public int updateAllById(Member member) {
+		Connection conn = getConnection();
+		int result = memberDao.updateAllById(conn, member);
+		if(result > 0) {
+			commit(conn);
+		} else {
+			close(conn);
+		}
+		return result;
+	}
+
+	public int deleteMember(String memberId) {
+		Connection conn = getConnection();
+		int result = memberDao.deleteMember(conn, memberId);
+		if(result > 0) {
+			commit(conn);
+		} else {
+			close(conn);
+		}
 		return result;
 	}
 	
