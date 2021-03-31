@@ -19,7 +19,12 @@ import member.model.vo.Member;
 /**
  * Servlet Filter implementation class AdminLoginFilter
  */
-@WebFilter("/admin/memberlist")
+@WebFilter(
+		urlPatterns = { 
+				"/admin/memberList", 
+				"/admin/memberRoleUpdate",
+				"/admin/memberFinder"
+		})
 public class AdminLoginFilter implements Filter {
 
  
@@ -33,7 +38,7 @@ public class AdminLoginFilter implements Filter {
 		Member loginMember = (Member)session.getAttribute("loginMember");
 		
 		if(loginMember == null || !(MemberService.ADMIN_ROLE.equals(loginMember.getMemberRole()))) {
-			session.setAttribute("msg", "관리자 로그인 후 사용하실 수 있습니다.");
+			session.setAttribute("msg", "관리만 사용할 수 있습니다.");
 			httpRes.sendRedirect(httpReq.getContextPath());
 			System.out.println("AdminLoginFilter 성공!");
 			return; //조기리턴 실행. chain.doFilter가 실행되지 않는다
