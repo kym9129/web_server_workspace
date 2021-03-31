@@ -22,18 +22,7 @@ public class AdminMemberFinderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	MemberService memberService = new MemberService();
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AdminMemberFinderServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+ 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//1. 사용자 입력값 처리
 		String searchType = request.getParameter("searchType");
 		String searchKeyword = request.getParameter("searchKeyword");
