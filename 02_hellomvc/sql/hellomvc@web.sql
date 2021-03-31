@@ -53,9 +53,15 @@ commit;
 
 select * from member;
 
+select * from member order by enroll_date desc;
+
+update member
+set password ='1ARVn2Auq2/WAqx2gNrL+q3RNjAzXpUfCXrzkA6d4Xa22yhRLy4AC50E+6UTPoscbo31nbOoq51gvkuXzJ6B2w==';
+
 --delete from member;
 --updateAllById = update member 
 --set password = ?, member_name = ?, member_role = ?, gender = ?, birthday = ?, email = ?, phone = ?, address = ?, hobby = ?  
 --where member_id = ?
 
 --deleteMember = delete from member where member_id = ?
+--updatePassword = update member set password = ? where member_id = ?

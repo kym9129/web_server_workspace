@@ -1,33 +1,31 @@
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.List"%>
+<%@page import="java.sql.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="java.sql.*"%>
+    pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%
-
 	String memberId = loginMember.getMemberId();
-	String password = loginMember.getPassword();
+	//String password = loginMember.getPassword();
 	String memberName = loginMember.getMemberName();
 	Date birthday = loginMember.getBirthday();
-	String email = loginMember.getEmail() != null? loginMember.getEmail() : "";
+	String email = loginMember.getEmail() != null ? loginMember.getEmail() : "";
 	String phone = loginMember.getPhone();
-	String address = loginMember.getAddress() != null? loginMember.getAddress() : "";
-	String gender = loginMember.getGender() !=null? loginMember.getGender() : "";
-	String hobby = loginMember.getHobby();
+	String address = loginMember.getAddress() != null ? loginMember.getAddress() : "";
+	String gender = loginMember.getGender() != null ? loginMember.getGender() : "";
+	String hobby = loginMember.getHobby(); // 등산,게임
 	
 	List<String> hobbyList = null;
 	if(hobby != null){
 		String[] arr = hobby.split(",");
-		hobbyList = Arrays.asList(arr); //String[] -> List<String>
+		hobbyList = Arrays.asList(arr); // String[] -> List<String>
 	}
 
+
 %>
-<form name="deleteMemberFrm" action ="<%= request.getContextPath() %>/member/deleteMember" method = "POST">
-	<input type="hidden" name="deleteMemberId" value = "<%= loginMember.getMemberId() %>" />
-</form>
 <section id=enroll-container>
 	<h2>회원 정보</h2>
-	<form id="memberUpdateFrm" method="post" action = "<%= request.getContextPath() %>/member/updateMember">
+	<form id="memberUpdateFrm" method="post">
 		<table>
 			<tr>
 				<th>아이디</th>
@@ -35,34 +33,34 @@
 					<input type="text" name="memberId" id="memberId_" value="<%= memberId %>" readonly>
 				</td>
 			</tr>
-			<tr>
+			<%-- <tr>
 				<th>패스워드</th>
 				<td>
-					<input type="password" name="password" id="password_" value="<%=password %>" required>
+					<input type="password" name="password" id="password_" value="<%= password %>" required>
 				</td>
 			</tr>
 			<tr>
 				<th>패스워드확인</th>
 				<td>	
-					<input type="password" id="password2" value="" required><br>
+					<input type="password" id="password2" value="<%= password %>" required><br>
 				</td>
-			</tr> 
+			</tr> --%> 
 			<tr>
 				<th>이름</th>
 				<td>	
-				<input type="text"  name="memberName" id="memberName" value="<%=memberName %>"  required><br>
+				<input type="text"  name="memberName" id="memberName" value="<%= memberName %>"  required><br>
 				</td>
 			</tr>
 			<tr>
 				<th>생년월일</th>
 				<td>	
-				<input type="date" name="birthday" id="birthday" value="<%=birthday%>"><br>
+				<input type="date" name="birthday" id="birthday" value="<%= birthday %>"><br>
 				</td>
 			</tr> 
 			<tr>
 				<th>이메일</th>
 				<td>	
-					<input type="email" placeholder="abc@xyz.com" name="email" id="email" value="<%=email%>"><br>
+					<input type="email" placeholder="abc@xyz.com" name="email" id="email" value="<%= email %>"><br>
 				</td>
 			</tr>
 			<tr>
@@ -80,9 +78,9 @@
 			<tr>
 				<th>성별 </th>
 				<td>
-			       		 <input type="radio" name="gender" id="gender0" value="M" <%= "M".equals(gender)? "checked" : "" %>>
+			       		 <input type="radio" name="gender" id="gender0" value="M" <%= "M".equals(gender) ? "checked" : "" %>>
 						 <label for="gender0">남</label>
-						 <input type="radio" name="gender" id="gender1" value="F" <%= "F".equals(gender)? "checked" : "" %>>
+						 <input type="radio" name="gender" id="gender1" value="F" <%= "F".equals(gender) ? "checked" : "" %>>
 						 <label for="gender1">여</label>
 				</td>
 			</tr>
@@ -90,61 +88,102 @@
 				<th>취미 </th>
 				<td>
 					<input type="checkbox" name="hobby" id="hobby0" value="운동" <%= hobbyChecked(hobbyList, "운동") %>><label for="hobby0">운동</label>
-					<input type="checkbox" name="hobby" id="hobby1" value="등산" <%= hobbyList != null && hobbyList.contains("등산") ? "checked" : "" %>>><label for="hobby1">등산</label>
-					<input type="checkbox" name="hobby" id="hobby2" value="독서" <%= hobbyList != null && hobbyList.contains("독서") ? "checked" : "" %>>><label for="hobby2">독서</label><br />
-					<input type="checkbox" name="hobby" id="hobby3" value="게임" <%= hobbyList != null && hobbyList.contains("게임") ? "checked" : "" %>>><label for="hobby3">게임</label>
-					<input type="checkbox" name="hobby" id="hobby4" value="여행" <%= hobbyList != null && hobbyList.contains("여행") ? "checked" : "" %>>><label for="hobby4">여행</label><br />
+					<input type="checkbox" name="hobby" id="hobby1" value="등산" <%= hobbyChecked(hobbyList, "등산") %>><label for="hobby1">등산</label>
+					<input type="checkbox" name="hobby" id="hobby2" value="독서" <%= hobbyChecked(hobbyList, "독서") %>><label for="hobby2">독서</label><br />
+					<input type="checkbox" name="hobby" id="hobby3" value="게임" <%= hobbyChecked(hobbyList, "게임") %>><label for="hobby3">게임</label>
+					<input type="checkbox" name="hobby" id="hobby4" value="여행" <%= hobbyChecked(hobbyList, "여행") %>><label for="hobby4">여행</label><br />
 				</td>
 			</tr>
 		</table>
-        <input type="submit" value="정보수정"/>
+        <input type="button" onclick="updateMember();" value="정보수정"/>
+        <input type="button" onclick="updatePassword();" value="비밀번호변경"/>
         <input type="button" onclick="deleteMember();" value="탈퇴"/>
 	</form>
 </section>
-<<script>
-/*
- *@실습문제 : 회원정보 수정 & 탈퇴
- 회원정보 수정 & 탈퇴 - 페이지 이동 필수
- 회원정보 수정시 유효성필요.
- 탈퇴 POST방식으로 처리할 것.
- 회원정보 수정후에 Session의 loginMember의 정보도 변경되었는가?
- 회원탈퇴후에 로그아웃 처리되었는가? 
- */
- 
-	/* 
-	회원수정 폼 제출전 적절한 유효성 검사를 실시할 것.
-	*/
-	$('[name="memberUpdateFrm"]').submit(function(){
-		//id 4자이상
-		var $memberId_ = $("#memberId_");
-		if(/^.{4,}$/.test($memberId_.val()) == false){
-			alert("아이디는 4자 이상이어야 합니다.");
-			$memberId_.select();
-			return false;
-		}
-		//전화번호 -없이
-		var $phone = $("#phone");
-		if(/^[0-9]{10,11}/.test($phone.val()) == false){
-			alert("전화번호는 숫자로만 입력해주세요.");
-			$phone.select();
-			return false;
-		}
-		
-	});
-	
-	
-	function deleteMember(){
-		var $frm = $("[name=deleteMemberFrm]");
-		$frm.submit();
-	}
+<form 	
+	name="memberDelFrm" 
+	action="<%= request.getContextPath() %>/member/memberDelete" 
+	method="POST">
+	<input type="hidden" name="memberId" value="<%= loginMember.getMemberId() %>" />
+</form>
+<script>
 
+function updatePassword(){
+	location.href = "<%= request.getContextPath() %>/member/updatePassword";
+}
+
+
+/* $("#password_2").blur(function(){
+	var $p1 = $("#password_");
+	var $p2 = $("#password2");
+	if($p1.val() != $p2.val()){
+		alert("패스워드가 일치하지 않습니다.");
+		$("#password_").select();
+	}
+}); */
+/**
+ * 유효성 검사
+ * memberId를 제외하고, 회원가입과 동일하다. 
+ */
+$("#memberUpdateFrm").submit(function(){
+	//password
+	/* var $p1 = $("#password_");
+	var $p2 = $("#password2");
+	if(/^[a-zA-Z0-9!@#$$%^&*()]{4,}/.test($p1.val()) == false){
+		alert("유효한 패스워드를 입력하세요.");
+		$p1.select();
+		return false;
+	}
+	
+	if($p1.val() != $p2.val()){
+		alert("패스워드가 일치하지 않습니다.");
+		$p1.select();
+		return false;
+	} */
+	
+	//memberName
+	var $memberName = $("#memberName");
+	if(/^[가-힣]{2,}$/.test($memberName.val()) == false){
+		alert("이름은 한글 2글자 이상이어야 합니다.");
+		$memberName.select();
+		return false;
+	}
+	
+	//phone
+	var $phone = $("#phone");
+	//-제거하기
+	$phone.val($phone.val().replace(/[^0-9]/g, ""));//숫자아닌 문자(복수개)제거하기
+	
+	if(/^010[0-9]{8}$/.test($phone.val()) == false){
+		alert("유효한 전화번호가 아닙니다.");
+		$phone.select();
+		return false;
+	}
+	
+	return true;
+});
+
+function updateMember(){
+	$("#memberUpdateFrm")
+		.attr("action","<%=request.getContextPath() %>/member/memberUpdate")
+		.submit();
+}
+
+
+function deleteMember(){
+    if(confirm("정말로 탈퇴하시겠습니까?")){
+    	$(document.memberDelFrm).submit();
+    }
+}
 
 </script>
 <%!
 	//메소드 선언문
 	public String hobbyChecked(List<String> hobbyList, String hobby){
-		return hobbyList != null && hobbyList.contains(hobby) ? "checked" : "" ;
+		return hobbyList != null && hobbyList.contains(hobby) ? 
+				"checked" : 
+					"";
 	}
-%>
 
+%>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

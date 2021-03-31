@@ -1,6 +1,7 @@
 package member.model.dao;
 
 import java.io.FileNotFoundException;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -8,7 +9,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import static common.JDBCTemplate.*;
 
 import common.JDBCTemplate;
 import member.model.vo.Member;
@@ -32,8 +37,10 @@ public class MemberDao {
 		String sql = prop.getProperty("selectOne");
 		ResultSet rset = null;
 		Member member = null;
+		PreparedStatement pstmt = null;
+		
 		try {
-			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, memberId);
 			rset = pstmt.executeQuery();
 			
@@ -57,6 +64,9 @@ public class MemberDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(pstmt);
 		}
 		
 		return member;
@@ -131,6 +141,130 @@ public class MemberDao {
 		}
 		
 		return result;
+	}
+
+	public int updatePassword(Connection conn, Member loginMember) {
+		int result = 0;
+		
+		String sql = prop.getProperty("updatePassword");
+		
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, loginMember.getPassword());
+			pstmt.setString(2, loginMember.getMemberId());
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	public List<Member> selectList(Connection conn) {
+		List<Member> list = new ArrayList<>();
+		Member member = null;
+		String sql = prop.getProperty("selectList");
+		ResultSet rset = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				String memberId = rset.getString("member_id");
+				String password = rset.getString("password");
+				String memberName = rset.getString("member_name");
+				String memberRole = rset.getString("member_role");
+				String gender = rset.getString("gender");
+				Date birthday = rset.getDate("birthday");
+				String email = rset.getString("email");
+				String phone = rset.getString("phone");
+				String address = rset.getString("address");
+				String hobby = rset.getString("hobby");
+				Date enrollDate = rset.getDate("enroll_date");
+				member = new Member(memberId, password, memberName, memberRole, gender, birthday, email, phone, address, hobby, enrollDate);
+				list.add(member);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return list;
+	}
+
+	public int updateRole(Connection conn, String memberId, String memberRole) {
+		int result = 0;
+		
+		String sql = prop.getProperty("updateRole");
+		
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberRole);
+			pstmt.setString(2, memberId);
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	public List<Member> selectMember(Connection conn, Map<String, String> param) {
+		List<Member> list = new ArrayList<>();
+		Member member = null;
+		ResultSet rset = null;
+		PreparedStatement pstmt = null;
+		
+		//select * from member where member_id like %keyword%
+		//select * from member where member_name like %keyword%
+		//select * from member where gender = 'M'
+		//->.properteis에는 select * from member where만 담기
+		String query = prop.getProperty("searchMember");
+		switch(param.get("searchType")) {
+		case "memberId" : query += " member_id like '%" + param.get("searchKeyword") + "%'"; break;
+		case "memberName" : query += " member_name like '%" + param.get("searchKeyword") + "%'"; break;
+		case "gender" : query += " gender = '" + param.get("searchKeyword") + "'"; break;
+		}
+		
+		System.out.println("query@dao = " + query);
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				String memberId = rset.getString("member_id");
+				String password = rset.getString("password");
+				String memberName = rset.getString("member_name");
+				String memberRole = rset.getString("member_role");
+				String gender = rset.getString("gender");
+				Date birthday = rset.getDate("birthday");
+				String email = rset.getString("email");
+				String phone = rset.getString("phone");
+				String address = rset.getString("address");
+				String hobby = rset.getString("hobby");
+				Date enrollDate = rset.getDate("enroll_date");
+				member = new Member(memberId, password, memberName, memberRole, gender, birthday, email, phone, address, hobby, enrollDate);
+				list.add(member);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return list;
 	}
 
 }

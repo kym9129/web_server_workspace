@@ -34,11 +34,11 @@ public class DeleteMemberServlet extends HttpServlet {
 		
 		if(result > 0) {
 			session.setAttribute("deleteMsg", "회원탈퇴가 정상처리되었습니다.");
-			session.removeAttribute("loginMember");
+//			session.removeAttribute("loginMember");
 			System.out.println("deleteMember completed!");
 			//로그아웃
 			//리다이렉션
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			response.sendRedirect(request.getContextPath() + "/member/logout");
 		}
 		else {
 			session.setAttribute("deleteMsg", "회원탈퇴에 실패했습니다.");
