@@ -19,13 +19,13 @@ import member.model.vo.Member;
 /**
  * Servlet Filter implementation class AdminLoginFilter
  */
-@WebFilter(
-		urlPatterns = { 
-				"/admin/memberList", 
-				"/admin/memberRoleUpdate",
-				"/admin/memberFinder"
-		})
-public class AdminLoginFilter implements Filter {
+//@WebFilter(
+//		urlPatterns = { 
+//				"/admin/memberlist", 
+//				"/admin/memberRoleUpdate",
+//				"/admin/memberFinder"
+//		})
+public class AdminFilter implements Filter {
 
  
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

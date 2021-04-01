@@ -77,7 +77,7 @@ public class MemberService {
 		
 		return list;
 	}
-
+	
 	public int updateRole(String memberId, String memberRole) {
 		Connection conn = getConnection();
 		int result = memberDao.updateRole(conn, memberId, memberRole);
@@ -88,13 +88,39 @@ public class MemberService {
 		}
 		return result;
 	}
-
-	public List<Member> searchMember(Map<String, String> param) {
+	
+	public List<Member> selectList(int start, int end) {
 		Connection conn = getConnection();
-		List<Member> list = memberDao.selectMember(conn, param);
+		List<Member> list = memberDao.selectList(conn, start, end);
 		close(conn);
 		
 		return list;
+	}
+	
+	public int selectMemberCount() {
+		Connection conn = getConnection();
+		int totalContents = memberDao.selectMemberCount(conn);
+		close(conn);
+		
+		return totalContents;
+	}
+
+
+
+	public List<Member> searchMember(Map<String, String> param, int start, int end) {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.searchMember(conn, param, start, end);
+		close(conn);
+		
+		return list;
+	}
+
+	public int searchMemberCount(Map<String, String> param) {
+		Connection conn = getConnection();
+		int totalContents = memberDao.searchMemberCount(conn, param);
+		close(conn);
+		
+		return totalContents;
 	}
 	
 	

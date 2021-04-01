@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import common.MVCUtils;
+import common.MvcUtils;
 import member.model.service.MemberService;
 import member.model.vo.Member;
 
@@ -42,7 +42,7 @@ public class MemberEnrollServlet extends HttpServlet {
 		
 		//2. 사용자 입력값 처리
 		String memberId = request.getParameter("memberId");
-		String password = MVCUtils.getsha512(request.getParameter("password"));
+		String password = MvcUtils.getsha512(request.getParameter("password"));
 		String memberName = request.getParameter("memberName");
 		//member_role은 기본값 U 로 처리. 상수 사용할것.
 		String memberRole = MemberService.MEMBER_ROLE;

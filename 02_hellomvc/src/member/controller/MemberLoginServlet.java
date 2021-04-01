@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import common.MVCUtils;
+import common.MvcUtils;
 import member.model.service.MemberService;
 import member.model.vo.Member;
 
@@ -47,7 +47,7 @@ public class MemberLoginServlet extends HttpServlet {
 		
 		// 2. 사용자 입력값 처리 (자바변수에 옮기기)
 		String memberId = request.getParameter("memberId");
-		String password = MVCUtils.getsha512(request.getParameter("password"));
+		String password = MvcUtils.getsha512(request.getParameter("password"));
 		String saveId = request.getParameter("saveId");
 		System.out.println("memberId@LoginServlet = " + memberId);
 		System.out.println("password@LoginServlet = " + password);

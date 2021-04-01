@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import common.MVCUtils;
+import common.MvcUtils;
 import member.model.service.MemberService;
 import member.model.vo.Member;
 
@@ -35,8 +35,8 @@ public class UpdatePasswordServlet extends HttpServlet {
 		String location = request.getContextPath();
 		
 		//1. 사용자 입력값 처리 : 기존비밀번호/신규비밀번호 암호화처리 필수
-		String password = MVCUtils.getsha512(request.getParameter("password"));
-		String newPassword = MVCUtils.getsha512(request.getParameter("newPassword"));
+		String password = MvcUtils.getsha512(request.getParameter("password"));
+		String newPassword = MvcUtils.getsha512(request.getParameter("newPassword"));
 //		String passwordCheck = request.getParameter("passwordCheck");
 		
 		
