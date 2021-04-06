@@ -60,8 +60,8 @@ public class AdminMemberListServlet extends HttpServlet {
 		
 		
 		//2. (인코딩->필터, 사용자입력값->없음) 업무로직 : 전체회원조회
-		int start = 1;
-		int end = 10;
+		int start = (cPage - 1) * numPerPage + 1;
+		int end = cPage * numPerPage;
 		//회원가입일 내림차순으로 조회 + paging기능 추가
 		List<Member> list = memberService.selectList(start, end);
 		System.out.println("list@servlet=" + list);

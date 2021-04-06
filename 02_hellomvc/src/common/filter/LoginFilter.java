@@ -22,7 +22,8 @@ import member.model.vo.Member;
 		urlPatterns = { 
 				"/member/memberView", 
 				"/member/memberUpdate",
-				"/member/deleteMember"
+				"/member/deleteMember",
+				"/board/boardForm"
 		})
 public class LoginFilter implements Filter {
 

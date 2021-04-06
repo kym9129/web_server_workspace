@@ -162,7 +162,7 @@
 					<ul class="main-nav">
 						<li class="home"><a href="<%= request.getContextPath() %>">Home</a></li>
 						<li class="notice"><a href="#">공지사항</a></li>
-						<li class="board"><a href="#">게시판</a></li>
+						<li class="board"><a href="<%= request.getContextPath() %>/board/boardList">게시판</a></li>
 						<%-- 관리자로그인시에만 관리자메뉴 노출 --%>
 						<% if(loginMember!=null && MemberService.ADMIN_ROLE.equals(loginMember.getMemberRole())){ %>
 						<li class="members"><a href="<%= request.getContextPath() %>/admin/memberlist">회원관리</a></li>

@@ -87,11 +87,9 @@ public class MvcUtils {
 		 */
 		
 		//1. 이전
-		if(pageNo == 1) {
-			
-		}else {
-			//pageNo == 6, 11일 경우에만 prev버튼 나오게함
-			pageBar.append("<a href='"+ url +"cPage=" + (pageNo - 1) + "'>prev</a>\n");
+		if(pageNo != 1 ) {
+//			pageBar.append("<a href='"+url+"?cPage="+(pageNo-1)+"'/></a>");
+			pageBar.append("<a href='"+url+"cPage="+(pageNo-1)+"'/>prev</a>\n");
 		}
 		
 		//2. pageNo
@@ -100,7 +98,7 @@ public class MvcUtils {
 				//pageNo이 현재페이지이면 링크를 없에려고 span태그로 작성
 				pageBar.append("<span class='cPage'>" + pageNo + "</span>");
 			}else {
-				pageBar.append("<a href='"+ url +"cPage=" + (pageNo - 1) + "'>" + pageNo + "</a>\n");
+				pageBar.append("<a href='"+ url +"cPage=" + pageNo + "'>" + pageNo + "</a>\n");
 			}
 			pageNo++;
 		}

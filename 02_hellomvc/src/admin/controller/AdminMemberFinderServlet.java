@@ -47,8 +47,8 @@ public class AdminMemberFinderServlet extends HttpServlet {
 		//2. 업무 로직
 //		List<Member> list = memberService.searchMember(param);
 //		System.out.println("list@servlet = " + list);
-		int start = 1;
-		int end = 10;
+		int start = (cPage - 1) * numPerPage + 1;
+		int end = cPage * numPerPage;
 		List<Member> list = memberService.searchMember(param, start, end);
 		System.out.println("list@servlet = " + list);
 		
