@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.util.List;
 
 import board.model.dao.BoardDao;
+import board.model.exception.BoardException;
 import board.model.vo.Attachment;
 import board.model.vo.Board;
 
@@ -54,9 +55,10 @@ public class BoardService {
 			}
 			commit(conn);
 		} catch(Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			rollback(conn); //예외가 발생할 경우 dao메소드 위의 3개 같이 롤백처리
-			result = 0;
+//			result = 0;
+			throw new BoardException("게시물 등록 오류", e);
 		} finally {
 			close(conn);
 		}
@@ -80,6 +82,48 @@ public class BoardService {
 		
 		close(conn);
 		return board;
+	}
+
+	public int deleteBoard(int no) {
+		Connection conn = getConnection();
+		int result = 0;
+		
+		try {
+			result = boardDao.deleteBoard(conn, no);
+			if(result == 0)
+				throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다. : " + no);
+			
+			commit(conn);
+		} catch(Exception e) {
+//			e.printStackTrace();
+			rollback(conn);
+			throw e; // controller가 예외처리를 결정할 수 있도록 넘김
+		} finally {
+			close(conn);
+		}
+		return result;
+	}
+
+	public int updateBoard(Board board) {
+		Connection conn = getConnection();
+		int result = 0;
+		try {
+			//1. board update : board테이블에 게시글이 있는 상황
+			result = boardDao.updateBoard(conn, board);
+			//2. attachment insert : attachment테이블에 data가 없는 상황
+			if(board.getAttach() != null) {
+				result = boardDao.insertAttachment(conn, board.getAttach());
+			}
+			
+			commit(conn);
+		} catch(Exception e) {
+			rollback(conn);
+			throw e;
+			
+		}finally {
+			close(conn);
+		}
+		return result;
 	}
 
 }

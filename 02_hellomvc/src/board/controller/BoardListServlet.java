@@ -47,11 +47,11 @@ public class BoardListServlet extends HttpServlet {
 		int end = cPage * numPerPage;
 		
 		List<Board> list = boardService.selectList(start, end);
-		System.out.println("boardList@servlet = " + list);
+//		System.out.println("boardList@servlet = " + list);
 		
 		//b. pageBar영역(MvcUtil클래스 활용)
 		int totalContents = boardService.selectBoardCount();
-		System.out.println("totalContents@BoardListServlet = " + totalContents);
+//		System.out.println("totalContents@BoardListServlet = " + totalContents);
 		String url = request.getRequestURI(); // /mvc/board/boardList
 		String pageBar = MvcUtils.getPageBar(cPage, numPerPage, totalContents, url);
 		

@@ -4,6 +4,10 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%
 	Board board = (Board)request.getAttribute("board");
+	boolean editable = 
+			loginMember != null && 
+			(loginMember.getMemberId().equals(board.getWriter()) 
+					|| MemberService.ADMIN_ROLE.equals(loginMember.getMemberRole()));		
 %>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board.css" />
 <section id="board-container">
@@ -31,7 +35,7 @@
 				<% if(board.getAttach().getNo() != 0){ %>
 				<%-- 첨부파일이 있을경우만, 이미지와 함께 original파일명 표시 --%>
 				<img alt="첨부파일" src="<%=request.getContextPath() %>/images/file.png" width=16px>
-				<a href="#"></a>
+				<a href="<%= request.getContextPath() %>/board/fileDownload?no=<%= board.getNo() %>"><%= board.getAttach().getOriginalFileName() %></a>
 				<% } %>
 			</td>
 		</tr>
@@ -40,12 +44,31 @@
 			<td><%= board.getContent() %></td>
 		</tr>
 		<tr>
+		<% if(editable){ %>
 			<%-- 작성자와 관리자만 마지막행 수정/삭제버튼이 보일수 있게 할 것 --%>
 			<th colspan="2">
 				<input type="button" value="수정하기" onclick="updateBoard()">
 				<input type="button" value="삭제하기" onclick="deleteBoard()">
 			</th>
+			<% } %>
 		</tr>
 	</table>
 </section>
+<form 
+	action="<%= request.getContextPath() %>/board/boardDelete" 
+	name="boardDelFrm"
+	method="POST">
+	<input type="hidden" name="no" value="<%= board.getNo() %>" />
+</form>
+<script>
+function updateBoard(){
+	location.href="<%= request.getContextPath() %>/board/boardUpdate?no=<%= board.getNo() %>";
+}
+
+function deleteBoard(){
+	if(confirm("게시글을 정말 삭제하시겠습니까?")){
+		$(document.boardDelFrm).submit(); //확인 시, 히든폼 제출
+	}
+}
+</script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

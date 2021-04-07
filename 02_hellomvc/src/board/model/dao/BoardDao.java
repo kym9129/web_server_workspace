@@ -49,7 +49,7 @@ public class BoardDao {
 			pstmt.setInt(1, start);
 			pstmt.setInt(2, end);
 			rset = pstmt.executeQuery();
-			System.out.println("sql@selectList() @boardDao= " + sql);
+//			System.out.println("sql@selectList() @boardDao= " + sql);
 			
 			while(rset.next()) {
 				Board board = new Board();
@@ -129,7 +129,7 @@ public class BoardDao {
 			result = pstmt.executeUpdate();
 			
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new BoardException("게시물 등록 오류", e);
 		} finally {
 			close(pstmt);
@@ -172,7 +172,7 @@ public class BoardDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, attach.getBoardNo());
 			pstmt.setString(2, attach.getOriginalFileName());
-			pstmt.setString(3, attach.getRenamedFileNAme());
+			pstmt.setString(3, attach.getRenamedFileName());
 			result = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -207,8 +207,10 @@ public class BoardDao {
 				board.setReadCount(rset.getInt("read_count"));
 			}
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+//			e.printStackTrace();
+			//dao에서 에러메세지를 찍어버리면 controller에선 에러 여부를 알 수가 없음
+			throw new BoardException("게시글 조회 오류", e);
 		} finally {
 			close(rset);
 			close(pstmt);
@@ -233,8 +235,8 @@ public class BoardDao {
 				attach.setNo(rset.getInt("no"));
 				attach.setBoardNo(rset.getInt("board_no"));
 				attach.setOriginalFileName(rset.getString("original_filename"));
-				attach.setRenamedFileName(rset.getString("renamedFileNAme"));
-				attach.setStatus("Y".equals(rset.getString("status"))? true: false);
+				attach.setRenamedFileName(rset.getString("renamed_filename"));
+				attach.setStatus("Y".equals(rset.getString("status"))? true : false);
 			}
 			
 		} catch (SQLException e) {
@@ -281,6 +283,45 @@ public class BoardDao {
 		}
 
 		return board;
+	}
+
+	public int deleteBoard(Connection conn, int no) {
+		int result = 0;
+		
+		String sql = prop.getProperty("deleteBoard");
+		
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	public int updateBoard(Connection conn, Board board) {
+		String sql = prop.getProperty("updateBoard");
+		int result = 0;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, board.getTitle());
+			pstmt.setString(2, board.getContent());
+			pstmt.setInt(3, board.getNo());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			throw new BoardException("게시물 수정 오류", e);
+		} finally {
+			close(pstmt);
+		}
+
+		return result;
 	}
 
 }

@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import board.model.exception.BoardException;
 import board.model.service.BoardService;
 import board.model.vo.Board;
+import common.MvcUtils;
 
 @WebServlet("/board/boardView")
 public class BoardViewServlet extends HttpServlet {
@@ -24,18 +26,34 @@ public class BoardViewServlet extends HttpServlet {
 	 *  
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		//1. 사용자 입력값 처리 : no
-		int no = Integer.parseInt(request.getParameter("no"));
-		
-		//2. 업무로직 : board객체 조회(첨부파일 조회)
-		Board board = boardService.selectBoardByNo(no);
-		System.out.println("board@servlet = " + board);
-		
-		//3. jsp forwarding 리다이렉트
-		request.setAttribute("board", board);
-		request.getRequestDispatcher("/WEB-INF/views/board/boardView.jsp").forward(request, response);
-		
+		try {
+			//1. 사용자 입력값 처리 : no
+			int no = Integer.parseInt(request.getParameter("no"));
+			
+			//2. 업무로직 : board객체 조회(첨부파일 조회)
+			Board board = boardService.selectBoardByNo(no);
+			System.out.println("board@servlet = " + board);
+			if(board == null) {
+				throw new BoardException("해당 게시물이 존재하지 않습니다.");
+			}
+			
+			//xss공격 방지
+			board.setTitle(MvcUtils.escapeHtml(board.getTitle()));
+			board.setContent(MvcUtils.escapeHtml(board.getContent()));
+			
+			// \n개행문자를 <br/>태그로 변경
+			board.setContent(MvcUtils.convertLineFeedToBr(board.getContent()));
+			
+			//3. jsp forwarding 리다이렉트
+			request.setAttribute("board", board);
+			request.getRequestDispatcher("/WEB-INF/views/board/boardView.jsp").forward(request, response);
+		}catch(Exception e) {
+			//로깅
+			e.printStackTrace();
+			//관리자 이메일 알림
+			//예외를 was에 다시 던진다
+			throw e;
+		}
 		
 
 	}

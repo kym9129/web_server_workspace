@@ -13,12 +13,12 @@ public class Attachment {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Attachment(int no, int boardNo, String originalFileName, String renamedFileNAme, boolean status) {
+	public Attachment(int no, int boardNo, String originalFileName, String renamedFileName, boolean status) {
 		super();
 		this.no = no;
 		this.boardNo = boardNo;
 		this.originalFileName = originalFileName;
-		this.renamedFileName = renamedFileNAme;
+		this.renamedFileName = renamedFileName;
 		this.status = status;
 	}
 
@@ -46,7 +46,7 @@ public class Attachment {
 		this.originalFileName = originalFileName;
 	}
 
-	public String getRenamedFileNAme() {
+	public String getRenamedFileName() {
 		return renamedFileName;
 	}
 
@@ -65,7 +65,7 @@ public class Attachment {
 	@Override
 	public String toString() {
 		return "Attachment [no=" + no + ", boardNo=" + boardNo + ", originalFileName=" + originalFileName
-				+ ", renamedFileNAme=" + renamedFileName + ", status=" + status + "]";
+				+ ", renamedFileName=" + renamedFileName + ", status=" + status + "]";
 	}
 	
 	
