@@ -35,7 +35,7 @@
                 <img src="<%= request.getContextPath() %>/images/file.png" width="16px"/>
                 <%= board.getAttach().getOriginalFileName() %>
                 <input type="checkbox" name="delFile" id="delFile" value="<%= board.getAttach().getNo()%>"/>
-                <label for="delFile">삭제</label>
+                <label for="delFile">기존파일 삭제</label>
             </p>
             <% } %>
 		</td>
@@ -60,11 +60,17 @@ $("[name=upFile]").change(function(){
 	console.log($(this).val());
 	if($(this).val() != ""){
 		//파일 선택
-		$("#delFile").prop("checked", true);
+		$("#delFile")
+			.prop("checked", true)
+			.on('click', function(){
+				return false; //한번 체크하면 체크 풀 수 없음
+			})
 	}
 	else{
 		//파일 선택 취소 (파일선택창에서 열기 안하고 취소 눌렀을 때)
-		$("#delFile").prop("checked", false);
+		$("#delFile")
+			.prop("checked", false)
+			.off('click'); //return false처리했던 이벤트 헨들러 제거
 	}
 	
 });

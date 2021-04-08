@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import board.model.service.BoardService;
-import board.model.vo.Board;
+import board.model.vo.BoardCommentCount;
 import common.MvcUtils;
 
 /**
@@ -46,8 +46,8 @@ public class BoardListServlet extends HttpServlet {
 		int start = (cPage - 1) * numPerPage + 1;
 		int end = cPage * numPerPage;
 		
-		List<Board> list = boardService.selectList(start, end);
-//		System.out.println("boardList@servlet = " + list);
+		List<BoardCommentCount> list = boardService.selectList(start, end);
+		System.out.println("boardList@servlet = " + list);
 		
 		//b. pageBar영역(MvcUtil클래스 활용)
 		int totalContents = boardService.selectBoardCount();
@@ -55,6 +55,10 @@ public class BoardListServlet extends HttpServlet {
 		String url = request.getRequestURI(); // /mvc/board/boardList
 		String pageBar = MvcUtils.getPageBar(cPage, numPerPage, totalContents, url);
 		
+//		//각 게시글의 댓글 수 가져오기
+//		int commentCount = boardService.selectCommentCount(no);
+//		System.out.println("boardCommentCount@servlet = " + commentCount);
+//		
 		//3. 응답 html처리 jsp에 위임
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("list", list);

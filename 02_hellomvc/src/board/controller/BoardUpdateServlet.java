@@ -82,6 +82,10 @@ public class BoardUpdateServlet extends HttpServlet {
 			String originalFileName = multipartRequest.getOriginalFileName("upFile");
 			String renamedFileName = multipartRequest.getFilesystemName("upFile"); //중복될 경우 바뀔 이름
 			
+			//삭제할 첨부파일번호
+			String attachNo = multipartRequest.getParameter("delFile");
+			System.out.println("attachNo@servlet = " + attachNo);
+			
 			Board board = new Board();
 			board.setNo(no);
 			board.setTitle(title);
@@ -98,8 +102,15 @@ public class BoardUpdateServlet extends HttpServlet {
 				board.setAttach(attach);
 			}
 			
-			//2. 업무로직 : db에 insert
-			int result = boardService.updateBoard(board);
+			//2. 업무로직 : 
+			int result = 0;
+			//첨부파일 삭제
+			if(attachNo != null) {
+				result = boardService.deleteAttachment(attachNo);
+			}
+			
+			//db에 update
+			result = boardService.updateBoard(board);
 			System.out.println("result@servlet = " + result);
 //			System.out.println("board@EnrollServlet = " + board);
 			

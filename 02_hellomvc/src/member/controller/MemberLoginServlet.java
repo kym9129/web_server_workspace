@@ -113,7 +113,15 @@ public class MemberLoginServlet extends HttpServlet {
 		
 		//리다이렉트 : url변경
 		//response.sendRedirect("이동할 url");
-		response.sendRedirect(request.getContextPath());
+//		response.sendRedirect(request.getContextPath());
+		
+		//이전페이지로 리다이렉트 처리
+        String referer = request.getHeader("Referer");
+        System.out.println("refere@servlet = " + referer);
+        
+        //리다이렉트 : url변경
+        response.sendRedirect(referer);
+    
 	}
 
 }
