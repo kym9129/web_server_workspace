@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+  <select id="selectAllEmp" resultMap="empMap">
+  	select * 
+  	from emp 
+  	order by emp_id
+  </select>
+  
+  <select id="search1" resultMap="empMap">
+  	select * 
+  	from emp 
+  	where 
+  		${searchType} like '%' || #{searchKeyword} || '%'
+  	order by emp_id
+  </select>
+  
+  <select id="search2" resultMap="empMap">
+  select *
+  from(
+	  	select 
+	  		e.*, 
+	  		decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender
+	  	from
+	  		emp e
+	  ) e
+	order by emp_id
+	<where>
+	<if test="gender != null and gender !=''">
+		gender = #{gender}
+		</if>
+		<if test="searchType != null and searchType != ''">
+		and ${searchType} like '%' || #{searchKeyword} || '%'
+		</if>
+		<if test="salary != null and salary != 0">
+			<if test="salaryCompare != null and salaryCompare != ''">
+			<choose>
+				<when test="salaryCompare == 'ge'">
+					and salary <![CDATA[ >= ]]> #{salary}
+				</when>
+				<when test="salaryCompare == 'le'">
+					and salary <![CDATA[ <= ]]> #{salary}
+				</when>
+			</choose>
+			</if>
+		</if>
+		<!-- hireDate 문자형으로 처리 -->
+<!-- 		<if test="hireDate != null and hireDate != ''">
+			<if test="hireDateCompare != null and hireDateCompare != ''">
+			<choose>
+				<when test="hireDateCompare == 'ge'">
+					and hire_date <![CDATA[ >=]]> to_date(#{hireDate}, 'yyyy-mm-dd')
+				</when>
+				<when test="hireDateCompare == 'le'">
+					and hire_date <![CDATA[ <=]]> to_date(#{hireDate}, 'yyyy-mm-dd')
+				</when>
+			</choose>
+			</if>
+		</if> -->
+		<!-- hire_date 날짜형으로 처리 -->
+		<if test="hire_date != null">
+			<if test="hireDateCompare != null and hireDateCompare != ''">
+			<choose>
+				<when test="hireDateCompare == 'ge'">
+					and hire_date <![CDATA[ >=]]> #{hire_date}
+				</when>
+				<when test="hireDateCompare == 'le'">
+					and hire_date <![CDATA[ <=]]> #{hire_date}
+				</when>
+			</choose>
+			</if>
+		</if>
+		
+	</where>
+		
+  </select>
+  <select id="selectJobList" resultType = "map">
+  	select
+  		job_code "jobCode",
+  		job_name "jobName"
+  	from job
+  </select>
+  
+  <select id="search3" resultMap="empMap">
+    select *
+	  from(
+		  	select 
+		  		e.*, 
+		  		decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender,
+		  		nvl(d.dept_title, '인턴') dept_title,
+		  		j.job_name
+		  	from
+		  		emp e
+		  			left join dept d
+		  				on e.dept_code = d.dept_id
+		  			left join job j
+		  				on e.job_code = j.job_code
+		  ) e
+		  order by emp_id
+	<where>
+		<if test="jobCodeArr != null">
+		job_code in
+		<foreach 
+				collection="jobCodeArr" item="jobCode" 
+				open="(" close=")" separator=",">
+				#{jobCode}
+		</foreach>
+		</if>
+		<if test="deptCodeArr != null">
+		and nvl(dept_code, 'D0') in
+		<foreach collection="deptCodeArr" item="deptCode" open="(" close=")" separator=",">
+			#{deptCode}
+		</foreach>
+		</if>
+		
+	</where>
+  </select>
+  
+  <select id="selectDeptList" resultType="map">
+  select
+  	dept_id "deptId",
+  	dept_title "deptTitle"
+  from dept
+  </select>
+  
+  <select id="selectOne" parameterType="_int" resultMap="empMap">
+	select * 
+	from emp e left join dept d
+			  				on nvl(e.dept_code, 'D0') = nvl(d.dept_id, 'D0')
+			  			left join job j
+			  				on e.job_code = j.job_code
+	where emp_id = #{empId}
+  </select>
+  
+  <update id="updateEmp">
+  	update emp
+  	<trim prefix="SET" suffixOverrides=",">
+  		<if test="deptId != null">dept_code = #{deptId},</if>
+  		<if test="jobCode != null">job_code = #{jobCode}</if>
+  	</trim>
+  	where emp_id = ${empId}
+  </update>
+  
+  <resultMap type="map" id="empMap">
+  	<id column="emp_id" property="empId" />
+  	<result column="emp_name" property="empName" />
+  	<result column="emp_no" property="empNo" />
+  	<result column="gender" property="gender" />
+  	<result column="email" property="email" />
+  	<result column="phone" property="phone" />
+  	<result column="dept_code" property="deptCode" />
+  	<result column="dept_id" property="deptId" />
+  	<result column="dept_title" property="deptTitle" />
+  	<result column="job_code" property="jobCode" />
+  	<result column="job_name" property="jobName" />
+  	<result column="sal_level" property="salLevel" />
+  	<result column="salary" property="salary" />
+  	<result column="bonus" property="bonus" />
+  	<result column="manager_id" property="managerId" />
+  	<result column="hire_date" property="hireDate" />
+  	<result column="quit_date" property="quitDate" />
+  	<result column="quit_yn" property="quitYN" />
+  </resultMap>
+</mapper>

@@ -9,6 +9,8 @@ default tablespace users;
 --권한부여
 grant connect, resource to web;
 
+select * from dba_users;
+
 --=========================
 --web계정 
 --=========================

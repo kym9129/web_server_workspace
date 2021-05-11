@@ -112,31 +112,30 @@ public class BoardDao {
 		return totalContents;
 	}
 
-	public int insertBoard(Connection conn, Board board) {
-		String sql = prop.getProperty("insertBoard");
-		int result = 0;
-		PreparedStatement pstmt = null;
-		try {
-			pstmt = conn.prepareStatement(sql);
-			/**
-			 * insert into board (no,title,writer,content,reg_date,read_count) 
-			 * values (seq_board_no.nextval,?,?,?,sysdate,0);
-			 * 
-			 */
-			
-			pstmt.setString(1, board.getTitle());
-			pstmt.setString(2, board.getWriter());
-			pstmt.setString(3, board.getContent());
-			
-			result = pstmt.executeUpdate();
-			
-			
-		} catch (Exception e) {
-			throw new BoardException("게시물 등록 오류", e);
-		} finally {
-			close(pstmt);
-		}
-		
+		public int insertBoard(Connection conn, Board board) {
+			String sql = prop.getProperty("insertBoard");
+			int result = 0;
+			PreparedStatement pstmt = null;
+			try {
+				pstmt = conn.prepareStatement(sql);
+				/**
+				 * insert into board (no,title,writer,content,reg_date,read_count) 
+				 * values (seq_board_no.nextval,?,?,?,sysdate,0);
+				 * 
+				 */
+				
+				pstmt.setString(1, board.getTitle());
+				pstmt.setString(2, board.getWriter());
+				pstmt.setString(3, board.getContent());
+				
+				result = pstmt.executeUpdate();
+				
+				
+			} catch (Exception e) {
+				throw new BoardException("게시물 등록 오류", e);
+			} finally {
+				close(pstmt);
+			}
 		
 		return result;
 	}

@@ -4,11 +4,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 /*
  * Service, Dao클래스의 공통부분을 static 메소드로 제공
@@ -60,22 +64,52 @@ public class JDBCTemplate {
 			}
 	}
 	
+	/**
+	 * DBCP 이용버전
+	 * 
+	 * REsource등록 - JNDI를 통한 참조
+	 * (JNDK : 자원을 사용하기 위한 약속 같은 것)
+	 */
 	public static Connection getConnection() {
 		Connection conn = null;
+		
 		try {
-
-//		 * 2. Connection 객체 생성 (url, user, password)
-			conn = DriverManager.getConnection(url, user, password);
-			//DriverManager: java sql패키지의 클래스
-//		 * 	2.1 자동커밋 false설정
+			//javax.naming.Context
+			Context ctx = new InitialContext();
+			/**
+			 * JNDI구조
+			 * java :/comp/env/ + jdbc/myoracle
+			 */
+			
+			//javax.sql.DataSource
+			DataSource dataSource = (DataSource)ctx.lookup("java:/comp/env/jdbc/myoracle");
+			conn = dataSource.getConnection();
 			conn.setAutoCommit(false);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
+		} catch (NamingException | SQLException e) {
 			e.printStackTrace();
 		}
 		
 		return conn;
 	}
+
+	
+//	public static Connection getConnection() {
+//		Connection conn = null;
+//		try {
+//
+////		 * 2. Connection 객체 생성 (url, user, password)
+//			conn = DriverManager.getConnection(url, user, password);
+//			//DriverManager: java sql패키지의 클래스
+////		 * 	2.1 자동커밋 false설정
+//			conn.setAutoCommit(false);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		return conn;
+//	}
 	
 	public static void close(Connection conn) {
 //		 * 7. 자원반납 (conn)

@@ -264,3 +264,34 @@ connect by prior no = comment_ref
 order siblings by reg_date;
 
 --select bc.* from board_comment bc where board_no = ? start with comment_level = 1 connect by prior no = comment_ref order siblings by reg_date
+
+--selectCommentCount
+select count(*) count
+from(
+    select bc.*
+    from board_comment bc
+    where board_no = ?
+    start with comment_level = 1
+    connect by prior no = comment_ref
+    order siblings by reg_date
+);
+
+
+
+
+--시험용 쿼리
+CREATE TABLE BOARD(
+BOARD_NUM NUMBER,
+BOARD_WRITER VARCHAR2(20) NOT NULL,
+BOARD_TITLE VARCHAR2(50) NOT NULL,
+BOARD_CONTENT VARCHAR2(2000) NOT NULL,
+BOARD_DATE DATE DEFAULT SYSDATE,
+CONSTRAINT PK_BOARD PRIMARY KEY (BOARD_NUM),
+CONSTRAINT FK_BOARD_WRITER FOREIGN KEY (BOARD_WRITER) REFERENCES MEMBER (USERID) ON DELETE SET NULL
+
+);
+
+create sequence seq_board_no;
+
+insert into board(
+values(seq_board_no.nextval, ?, ?, ?, sysdate)
